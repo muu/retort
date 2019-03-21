@@ -28,6 +28,7 @@ after_initialize do
 
   class ::Retort::RetortsController < ApplicationController
     before_action :verify_post_and_user, only: :update
+    before_action :verify_retort, only: :update
 
     def update
       retort.toggle_user(current_user)
@@ -47,6 +48,14 @@ after_initialize do
     def verify_post_and_user
       respond_with_unprocessable("Unable to find post #{params[:post_id]}") unless post
       respond_with_unprocessable("You are not permitted to modify this") unless current_user
+    end
+
+    def valid_emoji
+      @valid_emoji ||= !SiteSetting.retort_limited_emoji_set || SiteSetting.retort_allowed_emojis.split('|').include?(params[:retort])
+    end
+
+    def verify_retort
+      respond_with_unprocessable("You are not permitted to use this emoji") unless valid_emoji
     end
 
     def respond_with_retort
