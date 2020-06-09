@@ -1,6 +1,6 @@
 # name: retort
 # about: Reactions plugin for Discourse
-# version: 1.1.11
+# version: 1.2.3
 # authors: James Kiesel (gdpelican)
 # url: https://github.com/gdpelican/retort
 
@@ -47,7 +47,7 @@ after_initialize do
 
     def verify_post_and_user
       respond_with_unprocessable("Unable to find post #{params[:post_id]}") unless post
-      respond_with_unprocessable("You are not permitted to modify this") unless current_user
+      respond_with_unprocessable("You are not permitted to modify this") unless current_user && !current_user.silenced?
     end
 
     def valid_emoji
