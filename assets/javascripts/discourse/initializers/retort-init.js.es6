@@ -24,6 +24,8 @@ function initializePlugin(api) {
     if (Retort.disabledFor(postId)) { return }
 
     Retort.storeWidget(helper)
+    
+    if (!post.retorts) { return }
 
     return post.retorts.map(({usernames, emoji}) => {
       return helper.attach('retort-toggle', { post, usernames, emoji });
@@ -144,7 +146,7 @@ function initializePlugin(api) {
           
           emojiPicker.onclick = (e) => {
             if (e.target.classList.contains("emoji")) {
-              this.onEmojiSelection(e);
+              this.emojiSelected(e.target.title);
             } else {
               this.set('isActive', false);
               this.onClose();
